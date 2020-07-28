@@ -7,4 +7,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="title_text_style" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textColor">@color/colotTitle</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="desc_text_style" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textSize">@dimen/desc_text_size</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
 </resources>

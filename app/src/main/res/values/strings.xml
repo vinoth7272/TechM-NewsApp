@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TechM-NewsApp</string>
+    <string name="image_desc">NewsImage</string>
 </resources>
