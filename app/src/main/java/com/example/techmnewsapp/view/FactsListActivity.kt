@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.techmnewsapp.R
 import com.example.techmnewsapp.data.api.ApiHelperImpl
 import com.example.techmnewsapp.data.api.ApiService
+import com.example.techmnewsapp.data.local.AppDatabase
+import com.example.techmnewsapp.data.local.DatabaseHelperImpl
 import com.example.techmnewsapp.data.model.Facts
 import com.example.techmnewsapp.databinding.ActivityNewsListBinding
 import com.example.techmnewsapp.utils.Status
@@ -23,6 +25,7 @@ class FactsListActivity : AppCompatActivity() {
     private lateinit var activityNewsListBinding: ActivityNewsListBinding
     private lateinit var factViewModel: FactViewModel
     private val apiService: ApiService by inject()
+    private val appDatabase: AppDatabase by inject()
     private val actionBar by lazy {
         supportActionBar
     }
@@ -34,26 +37,41 @@ class FactsListActivity : AppCompatActivity() {
             R.layout.activity_news_list
         )
         setUpViewModel()
+        setUpRefreshLayout()
         activityNewsListBinding.factsListAdapter = FactsListAdapter()
         activityNewsListBinding.factViewModel = factViewModel
 
-        if (isNetworkConnected()) {
-            factViewModel.fetchFacts()
-        }
+        loadData()
         setUpObserver()
+    }
+
+    private fun loadData() {
+        if (isNetworkConnected()) {
+            factViewModel.fetchFactsApi()
+        } else {
+            factViewModel.fetchFactsDB(this)
+        }
+    }
+
+    private fun setUpRefreshLayout() {
+        pullToRefresh.setOnRefreshListener {
+            pullToRefresh.isRefreshing = true
+            loadData()
+        }
     }
 
     /**
      * used to set observer for the live data object
      */
     private fun setUpObserver() {
-        factViewModel.baseResponse.observe(this, Observer {
+        factViewModel.baseResponseLiveData.observe(this, Observer {
+            pullToRefresh.isRefreshing = false
             when (it.status) {
                 Status.SUCCESS -> {
                     txt_error.visibility = View.GONE
                     progressBar.visibility = View.GONE
                     recyclerView.visibility = View.VISIBLE
-                    actionBar?.let { actionBar->
+                    actionBar?.let { actionBar ->
                         actionBar.title = it.data?.title
                     }
                     activityNewsListBinding.factsListAdapter?.setData(it.data?.facts as ArrayList<Facts>)
@@ -63,6 +81,7 @@ class FactsListActivity : AppCompatActivity() {
                     txt_error.visibility = View.VISIBLE
                     recyclerView.visibility = View.GONE
                     progressBar.visibility = View.GONE
+                    txt_error.text = it.message
                 }
                 Status.LOADING -> {
                     progressBar.visibility = View.VISIBLE
@@ -81,7 +100,10 @@ class FactsListActivity : AppCompatActivity() {
     private fun setUpViewModel() {
         factViewModel = ViewModelProvider(
             this,
-            ViewModelFactory(ApiHelperImpl(apiService))
+            ViewModelFactory(
+                ApiHelperImpl(apiService),
+                DatabaseHelperImpl(appDatabase)
+            )
         ).get(FactViewModel::class.java)
     }
 }

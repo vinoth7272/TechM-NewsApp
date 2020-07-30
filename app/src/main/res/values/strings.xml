@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TechM-NewsApp</string>
     <string name="image_desc">NewsImage</string>
+    <string name="network_error">Please check internet connection and try again</string>
 </resources>

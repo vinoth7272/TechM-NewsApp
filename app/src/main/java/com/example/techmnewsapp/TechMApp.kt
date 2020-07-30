@@ -1,6 +1,7 @@
 package com.example.techmnewsapp
 
 import android.app.Application
+import com.example.techmnewsapp.di.databaseModule
 import com.example.techmnewsapp.di.retrofitModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -13,7 +14,7 @@ class TechMApp : Application() {
         startKoin {
             androidContext(this@TechMApp)
             androidLogger(Level.DEBUG)
-            modules(arrayListOf(retrofitModule))
+            modules(arrayListOf(retrofitModule,databaseModule))
         }
     }
 }

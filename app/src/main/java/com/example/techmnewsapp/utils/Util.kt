@@ -8,7 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.squareup.picasso.Picasso
+import com.bumptech.glide.Glide
+import com.example.techmnewsapp.R
 
 
 fun Context.isNetworkConnected(): Boolean {
@@ -30,9 +31,14 @@ fun ImageView.bindImageUrl(imageUrl: String?) {
     if (imageUrl != null && imageUrl.isNotEmpty()) {
         Log.d("TAG", imageUrl)
         this.visibility = View.VISIBLE
-        val picasso = Picasso.get()
+        Glide.with(context)
+            .load(imageUrl)
+            .placeholder(R.drawable.ic_baseline_image_24)
+            .error(R.drawable.ic_baseline_error_outline_24)
+            .into(this)
+       /* val picasso = Picasso.get()
         picasso.isLoggingEnabled()
-        picasso.load(imageUrl).fit().into(this)
+        picasso.load(imageUrl).fit().into(this)*/
     } else {
         this.visibility = View.GONE
     }
