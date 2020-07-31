@@ -29,16 +29,12 @@ fun RecyclerView.bindRecyclerViewAdapter(adapter: RecyclerView.Adapter<*>) {
 @BindingAdapter(value = ["setImageUrl"])
 fun ImageView.bindImageUrl(imageUrl: String?) {
     if (imageUrl != null && imageUrl.isNotEmpty()) {
-        Log.d("TAG", imageUrl)
         this.visibility = View.VISIBLE
         Glide.with(context)
             .load(imageUrl)
             .placeholder(R.drawable.ic_baseline_image_24)
             .error(R.drawable.ic_baseline_error_outline_24)
             .into(this)
-       /* val picasso = Picasso.get()
-        picasso.isLoggingEnabled()
-        picasso.load(imageUrl).fit().into(this)*/
     } else {
         this.visibility = View.GONE
     }

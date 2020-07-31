@@ -9,12 +9,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.techmnewsapp.R
 import com.example.techmnewsapp.data.api.ApiHelperImpl
 import com.example.techmnewsapp.data.api.ApiService
+import com.example.techmnewsapp.data.api.Resource
+import com.example.techmnewsapp.data.api.Status
 import com.example.techmnewsapp.data.local.AppDatabase
 import com.example.techmnewsapp.data.local.DatabaseHelperImpl
+import com.example.techmnewsapp.data.model.BaseResponse
 import com.example.techmnewsapp.data.model.Facts
 import com.example.techmnewsapp.databinding.ActivityNewsListBinding
-import com.example.techmnewsapp.utils.Status
 import com.example.techmnewsapp.utils.isNetworkConnected
+import com.example.techmnewsapp.viewmodel.FactRepository
 import com.example.techmnewsapp.viewmodel.FactViewModel
 import com.example.techmnewsapp.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_news_list.*
@@ -45,14 +48,30 @@ class FactsListActivity : AppCompatActivity() {
         setUpObserver()
     }
 
+    private fun setUpViewModel() {
+        factViewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(
+                FactRepository(
+                    this,
+                    ApiHelperImpl(apiService),
+                    DatabaseHelperImpl(appDatabase)
+                )
+            )
+        ).get(FactViewModel::class.java)
+    }
+
     private fun loadData() {
         if (isNetworkConnected()) {
             factViewModel.fetchFactsApi()
         } else {
-            factViewModel.fetchFactsDB(this)
+            factViewModel.fetchFactsDB()
         }
     }
 
+    /**
+     * helps to refresh the call the API Again by using swipe to refresh widget
+     */
     private fun setUpRefreshLayout() {
         pullToRefresh.setOnRefreshListener {
             pullToRefresh.isRefreshing = true
@@ -68,42 +87,40 @@ class FactsListActivity : AppCompatActivity() {
             pullToRefresh.isRefreshing = false
             when (it.status) {
                 Status.SUCCESS -> {
-                    txt_error.visibility = View.GONE
-                    progressBar.visibility = View.GONE
-                    recyclerView.visibility = View.VISIBLE
-                    actionBar?.let { actionBar ->
-                        actionBar.title = it.data?.title
-                    }
-                    activityNewsListBinding.factsListAdapter?.setData(it.data?.facts as ArrayList<Facts>)
+                    loadSuccessData(it)
                 }
                 Status.ERROR -> {
-                    txt_error.text = it.message
-                    txt_error.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                    progressBar.visibility = View.GONE
-                    txt_error.text = it.message
+                    loadErrorData(it)
                 }
                 Status.LOADING -> {
-                    progressBar.visibility = View.VISIBLE
-                    txt_error.visibility = View.GONE
-                    recyclerView.visibility = View.GONE
+                    showLoading()
                 }
             }
 
         })
     }
 
-
-    /**
-     * used to initialize the news view model for the activity
-     */
-    private fun setUpViewModel() {
-        factViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(
-                ApiHelperImpl(apiService),
-                DatabaseHelperImpl(appDatabase)
-            )
-        ).get(FactViewModel::class.java)
+    private fun loadErrorData(it: Resource<BaseResponse>) {
+        txt_error.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+        progressBar.visibility = View.GONE
+        txt_error.text = it.message
     }
+
+    private fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+        txt_error.visibility = View.GONE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun loadSuccessData(it: Resource<BaseResponse>) {
+        txt_error.visibility = View.GONE
+        progressBar.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+        actionBar?.let { actionBar ->
+            actionBar.title = it.data?.title
+        }
+        activityNewsListBinding.factsListAdapter?.setData(it.data?.facts as ArrayList<Facts>)
+    }
+
 }

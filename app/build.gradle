@@ -47,8 +47,6 @@ dependencies {
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
-    // Picasso dependency
-    implementation "com.squareup.picasso:picasso:$picasso_version"
     //koindependency injection
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_ktx_version"
@@ -64,6 +62,10 @@ dependencies {
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
     androidTestImplementation "androidx.test.espresso:espresso-core:$expresso_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-contrib:$expresso_version"
+    // For espresso activity rule
+    androidTestImplementation "com.android.support.test:rules:$support_test_version"
+    androidTestImplementation "com.android.support.test:runner:$support_test_version"
 
     testImplementation "org.mockito:mockito-core:$mockito_version"
     testImplementation "androidx.arch.core:core-testing:$x_core_test_version"
