@@ -20,8 +20,12 @@ import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.Mockito.doReturn
-import org.mockito.Mockito.mock
+import org.mockito.MockitoAnnotations
 import retrofit2.Response
+
+/**
+ * @FactRepositoryTest class is used to test the FactRepository repository class methods
+ */
 
 @ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
@@ -55,10 +59,7 @@ class FactRepositoryTest {
 
     @Before
     fun setUp() {
-        apiHelper = mock(ApiHelper::class.java)
-        databaseHelper = mock(DatabaseHelper::class.java)
-        factRepository = mock(FactRepository::class.java)
-        context = mock(Context::class.java)
+        MockitoAnnotations.initMocks(this)
         factRepository = FactRepository(
             apiHelper = apiHelper,
             databaseHelper = databaseHelper,

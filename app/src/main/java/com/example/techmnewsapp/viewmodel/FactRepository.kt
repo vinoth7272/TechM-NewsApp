@@ -21,19 +21,24 @@ class FactRepository(
         baseResponseLiveData = if (response.isSuccessful) {
             val responseBody = response.body() as BaseResponse
             databaseHelper.deleteAll()
-            val factsList = ArrayList<Facts>()
-            responseBody.facts.forEachIndexed { index, value ->
-                val fact = Facts(
-                    index, responseBody.title, value.title, value.description, value.imageUrl
-                )
-                factsList.add(fact)
-            }
+            val factsList = loadFactListToInsert(responseBody)
             databaseHelper.insertAll(factsList)
             Resource.success(responseBody)
         } else {
             Resource.error(response.message(), null)
         }
         return baseResponseLiveData
+    }
+
+    private fun loadFactListToInsert(responseBody: BaseResponse): ArrayList<Facts> {
+        val factsList = ArrayList<Facts>()
+        responseBody.facts.forEachIndexed { index, value ->
+            val fact = Facts(
+                index, responseBody.title, value.title, value.description, value.imageUrl
+            )
+            factsList.add(fact)
+        }
+        return factsList
     }
 
     suspend fun getFactsDataFromDB(): Resource<BaseResponse> {

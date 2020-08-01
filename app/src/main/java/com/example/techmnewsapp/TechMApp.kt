@@ -11,10 +11,17 @@ import org.koin.core.logger.Level
 class TechMApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        setUpKoin()
+    }
+
+    /**
+     * method helps to start the koin dependency injection
+     */
+    private fun setUpKoin() {
         startKoin {
             androidContext(this@TechMApp)
             androidLogger(Level.DEBUG)
-            modules(arrayListOf(retrofitModule,databaseModule))
+            modules(arrayListOf(retrofitModule, databaseModule))
         }
     }
 }

@@ -33,14 +33,22 @@ class UtilKtTest {
         MockitoAnnotations.initMocks(this)
     }
 
+    /**
+     * This method helps to test the network connection status
+     */
     @Test
-    fun isConnectionTestFalse() {
+    fun isConnectionTestTrue() {
         doReturn(connectivityManager).`when`(context)
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         context.isNetworkConnected()
-        assertEquals(false, context.isNetworkConnected())
+        assertEquals(true, context.isNetworkConnected())
     }
 
+    /**
+     * method to test the image view visibility
+     * if URL is empty or null then Image View Gone else ImageView Visible
+     *
+     */
     @Test
     fun bindImageUrlTest(){
         imageView.bindImageUrl(null)
@@ -49,6 +57,12 @@ class UtilKtTest {
         imageView.bindImageUrl("TEST")
         assertEquals(imageView.visibility, View.VISIBLE)
     }
+
+    /**
+     * method to test the TextView visibility
+     * if string is empty or null then TextView Gone else TextView Visible
+     *
+     */
     @Test
     fun bindTextVisibilityTest(){
         textView.bindText(null)

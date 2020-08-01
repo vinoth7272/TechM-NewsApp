@@ -10,6 +10,9 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * @retrofitModule create an instance for Retrofit using KOIN DI Library
+ */
 
 val retrofitModule = module {
     single {
@@ -17,6 +20,9 @@ val retrofitModule = module {
 
     }
 }
+/**
+ * @databaseModule create an instance for Database using KOIN DI Library
+ */
 val databaseModule = module {
     single {
         getDBInstance(get())

@@ -6,6 +6,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.techmnewsapp.data.model.Facts
 import com.example.techmnewsapp.databinding.ListItemBinding
 
+/**
+ * FactListAdapter class helps to load the list of data into recycler view
+ */
 class FactsListAdapter : RecyclerView.Adapter<FactsListAdapter.ViewHolder>() {
 
     private var newsList = ArrayList<Facts>()

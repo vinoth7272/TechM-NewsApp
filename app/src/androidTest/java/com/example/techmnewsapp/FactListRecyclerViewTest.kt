@@ -18,7 +18,7 @@ import org.junit.Test
 @LargeTest
 class FactListRecyclerViewTest {
 
-    private val LAST_ITEM_ID: String = "item: 10"
+    private val LAST_ITEM_ID: String = "10"
 
     @get:Rule
     val activityScenario: ActivityScenarioRule<FactsListActivity> =
@@ -27,18 +27,27 @@ class FactListRecyclerViewTest {
     @get:Rule
     val activityRule = ActivityTestRule(FactsListActivity::class.java)
 
+    /**
+     * Method to test UI - to check scroll scroll position in the recyclerview
+     */
     @Test
-    fun scrollToPosition_checkText() {
+    fun scrollToPosition() {
         getCount()?.let {
             Espresso.onView(withId(R.id.recyclerView)).perform(scrollToPosition<RecyclerView.ViewHolder>(1))
         }
     }
 
+    /**
+     * Method to test the last Item in the list is not exit while initial load
+     */
     @Test
     fun lastItem_NotDisplayed() {
         Espresso.onView(ViewMatchers.withText(LAST_ITEM_ID)).check(ViewAssertions.doesNotExist())
     }
 
+    /**
+     * Test method to test the row click
+     */
     @Test
     fun row_Click() {
         // Click on one of the rows.
@@ -51,7 +60,9 @@ class FactListRecyclerViewTest {
 
     }
 
-
+    /**
+     * Method to get the totak count from recyclerView
+     */
     private fun getCount(): Int? {
         val recyclerView: RecyclerView =
             activityRule.activity.findViewById(R.id.recyclerView) as RecyclerView

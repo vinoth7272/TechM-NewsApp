@@ -48,6 +48,9 @@ class FactsListActivity : AppCompatActivity() {
         setUpObserver()
     }
 
+    /**
+     * Initialize view Model
+     */
     private fun setUpViewModel() {
         factViewModel = ViewModelProvider(
             this,
@@ -61,6 +64,9 @@ class FactsListActivity : AppCompatActivity() {
         ).get(FactViewModel::class.java)
     }
 
+    /**
+     * methods helps to load API when network connected else fetch data from DB(if data is available in DB)
+     */
     private fun loadData() {
         if (isNetworkConnected()) {
             factViewModel.fetchFactsApi()
@@ -100,6 +106,9 @@ class FactsListActivity : AppCompatActivity() {
         })
     }
 
+    /**
+     * method helps to set view visibility for Error Response
+     */
     private fun loadErrorData(it: Resource<BaseResponse>) {
         txt_error.visibility = View.VISIBLE
         recyclerView.visibility = View.GONE
@@ -107,12 +116,18 @@ class FactsListActivity : AppCompatActivity() {
         txt_error.text = it.message
     }
 
+    /**
+     * method helps to set progress bar visibility when loading
+     */
     private fun showLoading() {
         progressBar.visibility = View.VISIBLE
         txt_error.visibility = View.GONE
         recyclerView.visibility = View.GONE
     }
 
+    /**
+     * method helps to set view visibility for Success Response
+     */
     private fun loadSuccessData(it: Resource<BaseResponse>) {
         txt_error.visibility = View.GONE
         progressBar.visibility = View.GONE

@@ -18,6 +18,10 @@ import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
+/**
+ * @FactViewModelTest class used to test the @FactViewModel and its method
+ */
+
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FactViewModelTest {
@@ -54,12 +58,12 @@ class FactViewModelTest {
         mockFactsList.add(Facts(0, "", "Test", "Test", "Test"))
         mockBaseResponse = BaseResponse("Test Title", mockFactsList)
         mockSuccessResource = Resource.success(mockBaseResponse)
-
-        apiHelper = mock(ApiHelper::class.java)
-        factRepository = mock(FactRepository::class.java)
         viewModel = FactViewModel(factRepository)
     }
 
+    /**
+     * method to test the API Success response
+     */
     @Test
     fun fetchFactsApiSuccess() {
         testCoroutineRule.runBlockingTest {
@@ -74,6 +78,9 @@ class FactViewModelTest {
         }
     }
 
+    /**
+     * method to test the DB Success response
+     */
     @Test
     fun fetchFactsDB() {
         testCoroutineRule.runBlockingTest {
